@@ -9,11 +9,15 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@prisma/adapter-mariadb": "^7.9.1",
+    "@prisma/client": "^7.9.1",
     "classnames": "^2.3.2",
+    "mariadb": "^3.5.3",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "react-icons": "^4.11.0"
+    "react-icons": "^4.11.0",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -22,6 +26,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "prisma": "^7.9.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
