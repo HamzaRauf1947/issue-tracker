@@ -36,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Theme accentColor="violet">
           <Navbar />
           <main className="p-5">{children}</main>
-          <ThemePanel/>
+          {/* <ThemePanel/> */}
         </Theme>
       </body>
     </html>
