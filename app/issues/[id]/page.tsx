@@ -23,7 +23,7 @@ const IssueDetailPage = async ({ params }: Props) => {
   });
 
   if (!issue) notFound();
-  // await delay(2000);
+
 
   return (
     <div>
