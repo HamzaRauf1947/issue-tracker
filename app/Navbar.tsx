@@ -1,5 +1,12 @@
 "use client";
-import { Avatar, Box, Container, DropdownMenu, Flex, Text } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Container,
+  DropdownMenu,
+  Flex,
+  Text,
+} from "@radix-ui/themes";
 import classnames from "classnames";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -7,74 +14,80 @@ import { usePathname } from "next/navigation";
 import { FaBug } from "react-icons/fa";
 
 const Navbar = () => {
+  return (
+    <nav className="border-b mb-5 px-5 py-3">
+      <Container>
+        <Flex justify="between">
+          <Flex align="center" gap="3">
+            <Link href="/">
+              <FaBug />
+            </Link>
+            <Navlinks/>
+          </Flex>
+          <AuthStatus/>
+        </Flex>
+      </Container>
+    </nav>
+  );
+};
+
+const Navlinks = () => {
   const currentPath = usePathname();
-  const { status, data: session } = useSession();
 
   const links = [
     { label: "dashboard", href: "/" },
     { label: "issues", href: "/issues" },
   ];
   return (
-    <nav className="border-b mb-5 px-5 py-3">
-     <Container>
-       <Flex justify="between">
-        <Flex align="center" gap="3">
-          <Link href="/">
-            <FaBug />
+    <ul className="flex gap-6">
+      {links.map((link) => (
+        <li key={link.href}>
+          <Link
+            href={link.href}
+            className={classnames({
+              "nav-link":true,
+              "!text-zinc-900": link.href === currentPath,
+            })}
+          >
+            {link.label}
           </Link>
-          <ul className="flex gap-6">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className={classnames({
-                    "text-zinc-900": link.href === currentPath,
-                    "text-zinc-500": link.href != currentPath,
-                    "hover:text-zinc-800 transition-colors": true,
-                  })}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Flex>
+        </li>
+      ))}
+    </ul>
+  );
+};
 
-        <Box>
-          {status === "authenticated" && (
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger>
-                <Avatar src={session.user!.image!}
-                 fallback="?"
-                 size="2"
-                 radius="full"
-                 className="cursor-pointer"
-                 referrerPolicy="no-referrer"
-                 />
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content>
-                <DropdownMenu.Label>
-                  <Text size="2">
-                    {session.user!.email}
-                  </Text>
-                </DropdownMenu.Label>
+const AuthStatus = () => {
+  const { status, data: session } = useSession();
 
-                <DropdownMenu.Item>
+  if (status === "loading") return null;
 
-               <Link href="/api/auth/signout">Log out</Link>
-                </DropdownMenu.Item>
+  if (status === "unauthenticated")
+    return <Link className="nav-link" href="/api/auth/signin">Login</Link>;
+  return (
+    <Box>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <Avatar
+            src={session!.user!.image!}
+            fallback="?"
+            size="2"
+            radius="full"
+            className="cursor-pointer"
+            referrerPolicy="no-referrer"
+          />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Label>
+            <Text size="2">{session!.user!.email}</Text>
+          </DropdownMenu.Label>
 
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
-          )}
-
-          {status === "unauthenticated" && (
-            <Link href="/api/auth/signin">Login</Link>
-          )}
-        </Box>
-      </Flex>
-     </Container>
-    </nav>
+          <DropdownMenu.Item>
+            <Link href="/api/auth/signout">Log out</Link>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </Box>
   );
 };
 
