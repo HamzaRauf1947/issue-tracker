@@ -20,14 +20,20 @@ const IssuePage = async ({ searchParams }: Props) => {
     { label: "Status", value: "status", className: "hidden md:table-cell" },
     { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
   ];
+
+
   const params = await searchParams;
 const { status,orderBy } = params;
+
+  const validOrderBy = columns.map(c => c.value);
+const searchParamOrderBy = validOrderBy.includes(orderBy) ? orderBy : undefined;
   const statuses = Object.values(Status);
   const searchParamStaus = statuses.includes(status) ? status : undefined;
   const issues = await prisma.issue.findMany({
     where: {
       status: searchParamStaus,
     },
+    orderBy:searchParamOrderBy? {[searchParamOrderBy]:'asc'} : undefined,
   });
 
   return (
@@ -37,7 +43,10 @@ const { status,orderBy } = params;
         <Table.Header>
           <Table.Row>
             {columns.map((column) => (
-              <Table.ColumnHeaderCell key={column.value}>
+              <Table.ColumnHeaderCell
+               key={column.value}
+               className={column.className}
+               >
                <NextLink href={{
                 query:{...params,orderBy:column.value}
                }}>
