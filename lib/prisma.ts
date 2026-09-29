@@ -2,11 +2,11 @@ import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "@/app/generated/prisma/client";
 
 const adapter = new PrismaMariaDb({
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: "",
-  database: "issue-tracker-db",
+  host: process.env.DATABASE_HOST!,
+  port: parseInt(process.env.DATABASE_PORT || "3306"),
+  user: process.env.DATABASE_USER!,
+  password: process.env.DATABASE_PASSWORD!,
+  database: process.env.DATABASE_NAME!,
 });
 
 const globalForPrisma = globalThis as unknown as {
